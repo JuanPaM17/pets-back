@@ -60,7 +60,7 @@ public class ClienteController extends BaseController {
 	}
 
 	@PutMapping
-	@PreAuthorize("hasAuthority('CREATE_BUYER')")
+	@PreAuthorize("hasAuthority('UPDATE_BUYER')")
 	public ResponseEntity<ClienteDTO> update(@RequestBody ClienteDTO o) {
 		return new ResponseEntity<>(clienteService.create(o), HttpStatus.ACCEPTED);
 	}

@@ -43,8 +43,8 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable()
-				.authorizeRequests(
-						auth -> auth.requestMatchers("/api/auth/**", "/login").permitAll().anyRequest().authenticated())
+				.authorizeRequests(auth -> auth.requestMatchers("/api/auth", "/login", "/api/auth/register/**")
+						.permitAll().anyRequest().authenticated())
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).cors()
 				.configurationSource(corsConfigurationSource());
@@ -54,11 +54,11 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://localhost:8082")); // Permite el origen de tu frontend
-		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Permite métodos HTTP
-		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // Permite cabeceras específicas
+		configuration.setAllowedOrigins(List.of("http://localhost:8082"));
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration); // Aplica la configuración a todos los endpoints
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 

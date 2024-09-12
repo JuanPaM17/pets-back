@@ -60,7 +60,7 @@ public class MedicamentoController extends BaseController {
 	}
 
 	@PutMapping
-	@PreAuthorize("hasAuthority('CREATE_MEDICINE')")
+	@PreAuthorize("hasAuthority('UPDATE_MEDICINE')")
 	public ResponseEntity<MedicamentoDTO> update(@RequestBody MedicamentoDTO o) {
 		return new ResponseEntity<>(medicamentoService.create(o), HttpStatus.ACCEPTED);
 	}

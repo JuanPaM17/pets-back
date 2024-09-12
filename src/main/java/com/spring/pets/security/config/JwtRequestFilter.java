@@ -26,9 +26,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -40,22 +37,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 			jwt = authorizationHeader.substring(7);
-			username = jwtTokenUtil.extractUsername(jwt);
+			username = JwtTokenUtil.extractUsername(jwt);
 		}
 
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
 			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-			if (jwtTokenUtil.validateToken(jwt, userDetails)) {
-				List<String> permissions = jwtTokenUtil.extractPermissions(jwt);
-
-				// Construye las autoridades (roles/permisos) y establece en el contexto
-				Collection<GrantedAuthority> authorities = permissions.stream().map(SimpleGrantedAuthority::new)
-						.collect(Collectors.toList());
-
+			if (JwtTokenUtil.validateToken(jwt, userDetails)) {
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-						userDetails, null, authorities);
+						userDetails, null, userDetails.getAuthorities());
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
 		}

@@ -13,30 +13,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.pets.config.BaseController;
-import com.spring.pets.security.iService.IRolService;
-import com.spring.pets.security.model.Rol;
-import com.spring.pets.security.modelDTO.RolDTO;
+import com.spring.pets.security.iService.IPermisoxRolService;
+import com.spring.pets.security.model.PermisoxRol;
+import com.spring.pets.security.modelDTO.PermisoxRolDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/api/auth/rol")
-public class RolController extends BaseController {
+@RequestMapping("/api/auth/permisoxrol")
+public class PermisoxRolController extends BaseController {
 
 	@Autowired
-	private IRolService rolService;
+	private IPermisoxRolService permisoxRolService;
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('READ_ROL')")
+	@PreAuthorize("hasAuthority('READ_PERMISSIONXROL')")
 	public void getAll(HttpServletRequest request, HttpServletResponse response) {
 		JSONObject result = new JSONObject();
-		Example<Rol> example = null;
+		Example<PermisoxRol> example = null;
 		Pageable pageable = null;
 		String pageParam = request.getParameter("page");
 		String sizeParam = request.getParameter("size");
@@ -45,28 +44,31 @@ public class RolController extends BaseController {
 			int size = Integer.parseInt(sizeParam);
 			pageable = PageRequest.of(page - 1, size);
 		}
-		result.put("records", rolService.composeTable(example, pageable));
-		result.put("totalRecords", rolService.countAll(example));
+		result.put("records", permisoxRolService.composeTable(example, pageable));
+		result.put("totalRecords", permisoxRolService.countAll(example));
 		writeResponse(result, response);
 	}
 
 	@PostMapping
-	@PreAuthorize("hasAuthority('CREATE_ROL')")
-	public ResponseEntity<RolDTO> create(@RequestBody RolDTO o) {
-		return new ResponseEntity<>(rolService.create(o), HttpStatus.ACCEPTED);
+	@PreAuthorize("hasAuthority('CREATE_PERMISSIONXROL')")
+	public ResponseEntity<PermisoxRolDTO> create(@PathVariable(value = "rol", required = false) int rol,
+			@PathVariable(value = "permiso", required = false) int permiso) {
+		return new ResponseEntity<>(permisoxRolService.create(rol, permiso), HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping
-	@PreAuthorize("hasAuthority('UPDATE_ROL')")
-	public ResponseEntity<RolDTO> update(@RequestBody RolDTO o) {
-		return new ResponseEntity<>(rolService.create(o), HttpStatus.ACCEPTED);
+	@PreAuthorize("hasAuthority('UPDATE_PERMISSIONXROL')")
+	public ResponseEntity<PermisoxRolDTO> update(@PathVariable(value = "rol", required = false) int rol,
+			@PathVariable(value = "permiso", required = false) int permiso) {
+		return new ResponseEntity<>(permisoxRolService.create(rol, permiso), HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasAuthority('DELETE_ROL')")
-	public ResponseEntity<String> delete(@PathVariable(value = "id", required = false) int id) {
-		rolService.deleteById(id);
-		return new ResponseEntity<>("Rol eliminado con exito", HttpStatus.OK);
+	@PreAuthorize("hasAuthority('DELETE_PERMISSIONXROL')")
+	public ResponseEntity<String> delete(@PathVariable(value = "rol", required = false) int rol,
+			@PathVariable(value = "permiso", required = false) int permiso) {
+		permisoxRolService.deleteById(permiso, rol);
+		return new ResponseEntity<>("Permiso x rol eliminado con exito", HttpStatus.OK);
 	}
 
 }

@@ -58,7 +58,7 @@ public class UsuarioController extends BaseController {
 	}
 
 	@PutMapping("/{rol}")
-	@PreAuthorize("hasAuthority('CREATE_USER')")
+	@PreAuthorize("hasAuthority('UPDATE_USER')")
 	public ResponseEntity<UsuarioDTO> update(@RequestBody UsuarioDTO o,
 			@PathVariable(value = "rol", required = false) int rol) {
 		return new ResponseEntity<>(usuarioService.create(o, rol), HttpStatus.ACCEPTED);

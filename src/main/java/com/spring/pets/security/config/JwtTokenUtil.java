@@ -1,9 +1,7 @@
 package com.spring.pets.security.config;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -17,8 +15,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class JwtTokenUtil {
 
-	private static String SECRET_KEY = "+7TD6NJ7JVJolFzZVreP2XUaI5K/VkzN9+Gaao5jcoI="; // Cambia por una clave secreta
-																						// segura
+	private static String SECRET_KEY = "+7TD6NJ7JVJolFzZVreP2XUaI5K/VkzN9+Gaao5jcoI=";
 
 	public static String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
@@ -43,7 +40,7 @@ public class JwtTokenUtil {
 
 	public static String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
-		claims.put("permissions", Arrays.asList("READ_BUYER", "PERMISSION_READ_ROL"));
+		claims.put("permissions", userDetails.getAuthorities());
 		return createToken(claims, userDetails.getUsername());
 	}
 
@@ -56,10 +53,6 @@ public class JwtTokenUtil {
 	public static Boolean validateToken(String token, UserDetails userDetails) {
 		final String username = extractUsername(token);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-	}
-
-	public static List<String> extractPermissions(String token) {
-		return extractClaim(token, claims -> claims.get("permissions", List.class));
 	}
 
 }

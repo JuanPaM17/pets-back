@@ -87,8 +87,8 @@ public class PermisoxRolService implements IPermisoxRolService {
 	}
 
 	@Override
-	public PermisoxRolDTO create(PermisoxRolDTO object) {
-		PermisoxRol o = mapClass(object);
+	public PermisoxRolDTO create(int rolId, int permisoId) {
+		PermisoxRol o = new PermisoxRol();
 		try {
 			return mapDTO(repository.save(o));
 		} catch (Exception e) {

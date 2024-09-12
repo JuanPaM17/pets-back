@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.spring.pets.security.iService.IPermisoxRolService;
 import com.spring.pets.security.model.Usuario;
 import com.spring.pets.security.repository.UsuarioRepository;
 
@@ -17,13 +18,16 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
+	@Autowired
+	private IPermisoxRolService permisoxRolService;
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<Usuario> usuario = usuarioRepository.findByUsername(username);
 		if (usuario.isEmpty()) {
 			throw new UsernameNotFoundException("Usuario no encontrado");
 		}
-		return new MyUserDetails(usuario.get());
+		return new MyUserDetails(usuario.get(), permisoxRolService);
 	}
 
 }

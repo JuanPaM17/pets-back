@@ -20,7 +20,7 @@ public interface IPermisoxRolService {
 
 	Long countAll(Example<PermisoxRol> example);
 
-	PermisoxRolDTO create(PermisoxRolDTO object);
+	PermisoxRolDTO create(int rolId, int permisoId);
 
 	void deleteById(int permisoId, int rolId);
 
