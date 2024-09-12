@@ -65,9 +65,45 @@ public class MascotaService implements IMascotaService {
 	}
 
 	@Override
+	public List<MascotaDTO> getAllByClienteId(int id, Pageable pageable) {
+		List<Mascota> lista = new ArrayList<Mascota>();
+		if (pageable != null) {
+			Page<Mascota> page;
+			page = repository.findByClienteId(id, pageable);
+			lista = page.getContent();
+		} else {
+			lista = repository.findByClienteId(id);
+		}
+		return lista.stream().map(o -> mapDTO(o)).collect(Collectors.toList());
+	}
+
+	@Override
+	public Long countAllByClienteId(int id) {
+		return repository.countByClienteId(id);
+	}
+
+	@Override
 	public JSONArray composeTable(Example<Mascota> example, Pageable pageable) {
 		JSONArray jsonArray = new JSONArray();
 		for (MascotaDTO usuario : getAll(example, pageable)) {
+			JSONObject object = new JSONObject();
+			object.put("id", usuario.getId());
+			object.put("identificacion", usuario.getIdentificacion());
+			object.put("nombre", usuario.getNombre());
+			object.put("raza", usuario.getRaza());
+			object.put("edad", usuario.getEdad());
+			object.put("peso", usuario.getPeso());
+			object.put("medicamento", usuario.getMedicamentoNombre());
+			object.put("cliente", usuario.getClienteNombre());
+			jsonArray.put(object);
+		}
+		return jsonArray;
+	}
+
+	@Override
+	public JSONArray composeTableCliente(int clienteId, Pageable pageable) {
+		JSONArray jsonArray = new JSONArray();
+		for (MascotaDTO usuario : getAllByClienteId(clienteId, pageable)) {
 			JSONObject object = new JSONObject();
 			object.put("id", usuario.getId());
 			object.put("identificacion", usuario.getIdentificacion());

@@ -15,8 +15,9 @@ public class EncrypToData {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String passwordEncript = EncrypToData.encryptPassword("santi");
-		System.out.println("Contraseña encript: " + passwordEncript);
+		System.out.println("Contraseña secre: " + EncrypToData.encryptPassword("secretario"));
+		System.out.println("Contraseña vete: " + EncrypToData.encryptPassword("veterinario"));
+		System.out.println("Contraseña admin: " + EncrypToData.encryptPassword("admin"));
 	}
 
 }

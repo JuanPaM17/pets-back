@@ -3,6 +3,7 @@ package com.spring.pets.controller;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.pets.IService.IClienteService;
 import com.spring.pets.IService.IMascotaService;
 import com.spring.pets.config.BaseController;
+import com.spring.pets.model.Cliente;
 import com.spring.pets.model.Mascota;
 import com.spring.pets.modelDTO.MascotaDTO;
 
@@ -47,6 +50,24 @@ public class MascotaController extends BaseController {
 		}
 		result.put("records", mascotaService.composeTable(example, pageable));
 		result.put("totalRecords", mascotaService.countAll(example));
+		writeResponse(result, response);
+	}
+
+	@GetMapping("/{clienteId}")
+	@PreAuthorize("hasAuthority('READ_PET')")
+	public void getAllByCliente(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "clienteId", required = false) int clienteId) {
+		JSONObject result = new JSONObject();
+		Pageable pageable = null;
+		String pageParam = request.getParameter("page");
+		String sizeParam = request.getParameter("size");
+		if (pageParam != null && sizeParam != null) {
+			int page = Integer.parseInt(pageParam);
+			int size = Integer.parseInt(sizeParam);
+			pageable = PageRequest.of(page - 1, size);
+		}
+		result.put("records", mascotaService.composeTableCliente(clienteId, pageable));
+		result.put("totalRecords", mascotaService.countAllByClienteId(clienteId));
 		writeResponse(result, response);
 	}
 

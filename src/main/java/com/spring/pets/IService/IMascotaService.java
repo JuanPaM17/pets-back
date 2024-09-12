@@ -13,13 +13,19 @@ public interface IMascotaService {
 
 	MascotaDTO getById(Long id);
 
+	List<MascotaDTO> getAllByClienteId(int id, Pageable pageable);
+
 	MascotaDTO create(MascotaDTO object, String medicamento, String cliente);
 
 	List<MascotaDTO> getAll(Example<Mascota> example, Pageable pageable);
 
 	JSONArray composeTable(Example<Mascota> example, Pageable pageable);
 
+	JSONArray composeTableCliente(int clienteId, Pageable pageable);
+
 	Long countAll(Example<Mascota> example);
+
+	Long countAllByClienteId(int clienteId);
 
 	void deleteById(Long id);
 

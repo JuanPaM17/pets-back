@@ -30,7 +30,8 @@ public class ClienteService implements IClienteService {
 
 	@Override
 	public ClienteDTO getById(int id) {
-		Cliente o = repository.findById(id).orElseThrow(() -> new ResourceNotFound("Cliente", "id", String.valueOf(id)));
+		Cliente o = repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFound("Cliente", "id", String.valueOf(id)));
 		return mapDTO(o);
 	}
 
@@ -84,10 +85,17 @@ public class ClienteService implements IClienteService {
 			JSONObject object = new JSONObject();
 			object.put("id", usuario.getId());
 			object.put("nombre", usuario.getNombre());
+			object.put("nombreCompleto", usuario.getNombre() + " " + usuario.getApellidos());
 			object.put("apellidos", usuario.getApellidos());
 			object.put("cedula", usuario.getCedula());
 			object.put("direccion", usuario.getDireccion());
 			object.put("telefono", usuario.getTelefono());
+			object.put("buttonMoreInformation",
+					"<button onclick='loadInformation(" + usuario.getId() + ");' "
+							+ "class=\"btn btn-light-primary font-weight-bold mr-2\" "
+							+ "type=\"button\" data-toggle=\"modal\" data-target=\"#modal_detail\">\r\n"
+							+ "    Detalle\r\n" + "</button>");
+
 			jsonArray.put(object);
 		}
 		return jsonArray;
@@ -105,7 +113,8 @@ public class ClienteService implements IClienteService {
 
 	@Override
 	public void deleteById(int id) {
-		Cliente o = repository.findById(id).orElseThrow(() -> new ResourceNotFound("Cliente", "id", String.valueOf(id)));
+		Cliente o = repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFound("Cliente", "id", String.valueOf(id)));
 		repository.delete(o);
 	}
 
